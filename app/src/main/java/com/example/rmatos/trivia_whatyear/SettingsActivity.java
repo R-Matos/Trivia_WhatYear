@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -25,6 +26,7 @@ public class SettingsActivity extends Activity {
     private Switch switch_vibration;
     private EditText et_name;
     private EditText et_email;
+    private Button btn_save;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class SettingsActivity extends Activity {
         setState();                                                                                     //Sets state depending on data passed from previous activity
     }
 
+
     private void initialiseViews() {
         spinner_difficulty = (Spinner) findViewById(R.id.spinner_difficulty);
         switch_music = (Switch) findViewById(R.id.switch_music);
@@ -43,6 +46,7 @@ public class SettingsActivity extends Activity {
         switch_vibration = (Switch) findViewById(R.id.switch_vibration);
         et_name = (EditText) findViewById(R.id.et_name);
         et_email = (EditText) findViewById(R.id.et_email);
+        btn_save = (Button) findViewById(R.id.btn_save);
     }
 
     private void setState() {
@@ -80,6 +84,11 @@ public class SettingsActivity extends Activity {
         finish();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        onSave(btn_save);
+    }
 
 
 
