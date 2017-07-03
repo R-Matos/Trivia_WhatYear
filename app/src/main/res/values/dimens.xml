@@ -8,4 +8,5 @@
     <dimen name="settings_heading_separator_size">1dp</dimen>
     <dimen name="settings_separator_size">1dp</dimen>
     <dimen name="settings_separator_margin">5dp</dimen>
+    <dimen name="title">50sp</dimen>
 </resources>

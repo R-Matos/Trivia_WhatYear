@@ -9,4 +9,7 @@
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="save">Save</string>
+    <string name="play">Play</string>
+    <string name="categories">Categories</string>
+    <string name="highscores">Highscores</string>
 </resources>

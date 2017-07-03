@@ -3,18 +3,22 @@ package com.example.rmatos.trivia_whatyear;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /** RESOURCES
  * https://tvnews.vanderbilt.edu/explore_category?category=war
  * https://www.infoplease.com/yearbyyear
  * http://news.bbc.co.uk/onthisday/hi/years/default.stm
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Serializable {
 
     private static final int SETTINGS_INFO = 1;
     private static String difficulty;
@@ -23,14 +27,20 @@ public class MainActivity extends AppCompatActivity {
     private static boolean isVibrationOn;
     private static String name;
     private static String email;
+    private static Map<String, List<String>> cbCategoriesStates;                                    //Parent + child
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Action-bar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("");
+
+        //Sets state from previous data or default
         getPreviouslySavedData(savedInstanceState);
-        //TODO: Get previous session data to populate variables. Then delete variables default values.
+
 
     }
 
@@ -103,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         email = data.getStringExtra("email");
     }
 
-
     //If OS crashes or orientation change saves state
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -129,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         sPEditor.putBoolean("vibration", isVibrationOn);
         sPEditor.putString("name", email);
         sPEditor.putString("email", name);
+        //TODO: sPEditor.putStringSet(cbCategoriesStates, ObjectSerializer.serialize(cbCategoriesStates)); https://stackoverflow.com/questions/44884385/android-cannot-resolve-symbol-objectserializer
 
         sPEditor.commit();
         super.onStop();
@@ -136,36 +146,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    public void onCategory(View view) {
 
+        Intent getCategoriesScreenIntent = new Intent(this, CategoriesActivity.class);
+        final int result = 1;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        startActivityForResult(getCategoriesScreenIntent, result);
+    }
 }

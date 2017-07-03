@@ -20,8 +20,13 @@
 
         <activity android:name=".SettingsActivity"
             android:label="settings_activity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            />
 
+        <activity android:name=".CategoriesActivity"
+            android:label="catergories_activity"
+            android:theme="@style/AppTheme"
+            />
 
     </application>
 
