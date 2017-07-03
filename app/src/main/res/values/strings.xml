@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Trivia_WhatYear</string>
+    <string name="menu_settings">Settings</string>
+    <string name="heading_gameOptions">Game Options</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="music_on">Music On</string>
+    <string name="sound_on">Sound On</string>
+    <string name="vibration_on">Vibration On</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="save">Save</string>
+</resources>

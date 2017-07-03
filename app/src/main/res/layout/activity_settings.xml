@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding">
+
+
+    <TextView
+        android:id="@+id/tw_heading_gameOptions"
+        android:text="@string/heading_gameOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/settings_headings"
+        android:textColor="@android:color/black"/>
+
+    <View
+        android:id="@+id/separator_1"
+        android:background="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_heading_separator_size"
+        android:layout_below="@id/tw_heading_gameOptions"
+        android:layout_marginTop="@dimen/settings_heading_separator_padding"
+        android:layout_marginBottom="@dimen/settings_heading_separator_padding" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_difficulty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/separator_1"
+        android:paddingLeft="@dimen/settings_indent" >
+
+        <TextView
+            android:id="@+id/tw_difficulty"
+            android:text="@string/difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settings_subheading_size"
+            android:textColor="@android:color/black"
+            android:layout_weight="1"/>
+
+        <Spinner
+            android:id="@+id/spinner_difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/difficulty"
+            android:layout_weight="2"
+            android:entries="@array/difficulties">
+        </Spinner>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/separator_2"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_separator_size"
+        android:layout_below="@id/linear_layout_difficulty"
+        android:layout_marginTop="@dimen/settings_separator_margin"
+        android:layout_marginBottom="@dimen/settings_separator_margin"
+        android:layout_marginLeft="@dimen/settings_indent"/>
+
+    <Switch
+        android:id="@+id/switch_music"
+        android:text="@string/music_on"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/separator_2"
+        android:textSize="@dimen/settings_subheading_size"
+        android:paddingLeft="@dimen/settings_indent"/>
+
+    <View
+        android:id="@+id/separator_3"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_separator_size"
+        android:layout_below="@id/switch_music"
+        android:layout_marginTop="@dimen/settings_separator_margin"
+        android:layout_marginBottom="@dimen/settings_separator_margin"
+        android:layout_marginLeft="@dimen/settings_indent"/>
+
+    <Switch
+        android:id="@+id/switch_sound"
+        android:text="@string/sound_on"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/separator_3"
+        android:textSize="@dimen/settings_subheading_size"
+        android:paddingLeft="@dimen/settings_indent"/>
+
+    <View
+        android:id="@+id/separator_4"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_separator_size"
+        android:layout_below="@id/switch_sound"
+        android:layout_marginTop="@dimen/settings_separator_margin"
+        android:layout_marginBottom="@dimen/settings_separator_margin"
+        android:layout_marginLeft="@dimen/settings_indent"/>
+
+    <Switch
+        android:id="@+id/switch_vibration"
+        android:text="@string/vibration_on"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/separator_4"
+        android:textSize="@dimen/settings_subheading_size"
+        android:paddingLeft="@dimen/settings_indent" />
+
+    <View
+        android:id="@+id/separator_5"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_separator_size"
+        android:layout_below="@id/switch_vibration"
+        android:layout_marginTop="@dimen/settings_separator_margin"
+        android:layout_marginBottom="@dimen/settings_separator_margin"
+        android:layout_marginLeft="@dimen/settings_indent"/>
+
+
+    <TextView
+        android:id="@+id/tw_heading_personalInfo"
+        android:text="Personal Information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/separator_5"
+        android:textSize="@dimen/settings_headings"
+        android:textColor="@android:color/black"
+        android:paddingTop="@dimen/padding"/>
+
+    <View
+        android:id="@+id/separator_6"
+        android:background="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_heading_separator_size"
+        android:layout_below="@id/tw_heading_personalInfo"
+        android:layout_marginTop="@dimen/settings_heading_separator_padding"
+        android:layout_marginBottom="@dimen/settings_heading_separator_padding" />
+
+
+    <LinearLayout
+        android:id="@+id/linear_layout_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/separator_6"
+        android:paddingLeft="@dimen/settings_indent"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <TextView
+            android:id="@+id/tw_name"
+            android:text="@string/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settings_subheading_size"
+            android:textColor="@android:color/black"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/separator_7"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_separator_size"
+        android:layout_below="@id/linear_layout_name"
+        android:layout_marginTop="@dimen/settings_separator_margin"
+        android:layout_marginBottom="@dimen/settings_separator_margin"
+        android:layout_marginLeft="@dimen/settings_indent"/>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/separator_7"
+        android:paddingLeft="@dimen/settings_indent"
+        android:focusable="false" >
+
+
+        <TextView
+            android:id="@+id/tw_email"
+            android:text="@string/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settings_subheading_size"
+            android:textColor="@android:color/black"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/separator_8"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_separator_size"
+        android:layout_below="@id/linear_layout_email"
+        android:layout_marginTop="@dimen/settings_separator_margin"
+        android:layout_marginBottom="@dimen/settings_separator_margin"
+        android:layout_marginLeft="@dimen/settings_indent"/>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:text="@string/save"
+        android:onClick="onSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/separator_8"
+        android:layout_marginTop="20dp"/>
+
+
+</RelativeLayout>

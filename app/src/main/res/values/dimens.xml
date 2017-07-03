@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding">16dp</dimen>
+    <dimen name="settings_indent">20dp</dimen>
+    <dimen name="settings_headings">24sp</dimen>
+    <dimen name="settings_subheading_size">18sp</dimen>
+    <dimen name="settings_heading_separator_padding">7dp</dimen>
+    <dimen name="settings_heading_separator_size">1dp</dimen>
+    <dimen name="settings_separator_size">1dp</dimen>
+    <dimen name="settings_separator_margin">5dp</dimen>
+</resources>
