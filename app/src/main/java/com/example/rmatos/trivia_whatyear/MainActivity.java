@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     private static boolean isVibrationOn;
     private static String name;
     private static String email;
-    private static Map<String, List<String>> cbCategoriesStates;                                    //Parent + child
     private static CbCategoriesState categoriesState;
 
     @Override
@@ -56,6 +55,16 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             isVibrationOn = getPreferences(Context.MODE_PRIVATE).getBoolean("vibration",true);
             name = getPreferences(Context.MODE_PRIVATE).getString("name","");
             email = getPreferences(Context.MODE_PRIVATE).getString("email","");
+
+            String str = getPreferences(Context.MODE_PRIVATE).getString("categoriesState","");
+
+            System.out.println("str: " +str);
+            System.out.println("Email: " +email);
+
+            if (!str.equals("")) {
+                categoriesState = CbCategoriesState.Deserialize(str);
+            }
+
         } else {
             difficulty = savedInstanceState.getString("difficulty");
             isMusicOn = savedInstanceState.getBoolean("music");
@@ -63,12 +72,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             isVibrationOn = savedInstanceState.getBoolean("vibration");
             name = savedInstanceState.getString("name");
             email = savedInstanceState.getString("email");
+            categoriesState = CbCategoriesState.Deserialize(savedInstanceState.getString("categoriesState"));
         }
 
-        //TODO: Implement serializable for below
         if (categoriesState == null) {
             categoriesState = new CbCategoriesState();
         }
+
     }
 
 
@@ -92,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             Intent getSettingsScreenIntent = new Intent(this, SettingsActivity.class);
             final int result = 1;
 
+            System.out.println("test1: "+ difficulty);
             getSettingsScreenIntent.putExtra("difficulty", difficulty);
             getSettingsScreenIntent.putExtra("isMusicOn", isMusicOn);
             getSettingsScreenIntent.putExtra("isSoundsOn", isSoundsOn);
@@ -106,21 +117,35 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         return super.onOptionsItemSelected(item);
     }
 
+    public void onCategory(View view) {
+
+        Intent getCategoriesScreenIntent = new Intent(this, CategoriesActivity.class);
+        final int result = 2;
+
+        getCategoriesScreenIntent.putExtra("cbStates", categoriesState);
+
+        startActivityForResult(getCategoriesScreenIntent, result);
+    }
+
     //Obtains data from previous activities
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         //Settings activity
-        difficulty = data.getStringExtra("difficulty");
-        isMusicOn = data.getBooleanExtra("music", false);
-        isSoundsOn = data.getBooleanExtra("sound", false);
-        isVibrationOn = data.getBooleanExtra("vibration", false);
-        name = data.getStringExtra("name");
-        email = data.getStringExtra("email");
+        if (requestCode == 1) {
+            difficulty = data.getStringExtra("difficulty");
+            isMusicOn = data.getBooleanExtra("music", false);
+            isSoundsOn = data.getBooleanExtra("sound", false);
+            isVibrationOn = data.getBooleanExtra("vibration", false);
+            name = data.getStringExtra("name");
+            email = data.getStringExtra("email");
+        }
 
         //Categories activity
-        categoriesState = (CbCategoriesState) data.getSerializableExtra("cbStates");
+        if (requestCode == 2) {
+            categoriesState = (CbCategoriesState) data.getSerializableExtra("cbStates");
+        }
     }
 
     //If OS crashes or orientation change saves state
@@ -133,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         outState.putBoolean("vibration", isVibrationOn);
         outState.putString("name", email);
         outState.putString("email", name);
+        outState.putString("categoriesState", CbCategoriesState.Serialize(categoriesState));
 
         super.onSaveInstanceState(outState);
     }
@@ -148,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         sPEditor.putBoolean("vibration", isVibrationOn);
         sPEditor.putString("name", email);
         sPEditor.putString("email", name);
-        //TODO: sPEditor.putStringSet(cbCategoriesStates, ObjectSerializer.serialize(cbCategoriesStates)); https://stackoverflow.com/questions/44884385/android-cannot-resolve-symbol-objectserializer
+        sPEditor.putString("categoriesState", CbCategoriesState.Serialize(categoriesState));
 
         sPEditor.commit();
         super.onStop();
@@ -156,13 +182,5 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
 
-    public void onCategory(View view) {
 
-        Intent getCategoriesScreenIntent = new Intent(this, CategoriesActivity.class);
-        final int result = 1;
-
-        getCategoriesScreenIntent.putExtra("cbStates", categoriesState);
-
-        startActivityForResult(getCategoriesScreenIntent, result);
-    }
 }

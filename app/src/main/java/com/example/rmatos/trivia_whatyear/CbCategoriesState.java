@@ -48,4 +48,51 @@ public class CbCategoriesState implements Serializable {
     }
 
 
+    public static String Serialize(CbCategoriesState obj) {
+
+        String str = "";
+
+        for (int i = 0; i < parentSize; i++) {
+            for (int j = 0; j < childSize; j++) {
+                str += ", " + obj.getValue(i,j);
+            }
+        }
+        //System.out.println(str);
+        return str;
+    }
+
+    public static CbCategoriesState Deserialize(String serializedString) {
+
+        CbCategoriesState obj = new CbCategoriesState();
+
+        //Default
+
+        for (int i = 0; i < parentSize; i++) {
+            for (int j = 0; j < childSize; j++) {
+                //Below checks whether its going to be true or false
+                String booleanCheck = serializedString.substring(2, 3);
+                //System.out.println(booleanCheck);
+
+                int subStringLength;
+
+                if (booleanCheck.equals("t")) {
+                    subStringLength = 4;
+                } else {
+                    subStringLength = 5;
+                }
+
+                //Below gets value and reduces string
+                //System.out.println(serializedString.substring(2,subStringLength+2));
+                Boolean value = Boolean.parseBoolean(serializedString.substring(2,subStringLength+2));
+                serializedString = serializedString.substring(subStringLength+2);
+                //System.out.println(serializedString);
+
+                obj.setValue(i, j, value);
+            }
+        }
+
+        return obj;
+    }
+
+
 }

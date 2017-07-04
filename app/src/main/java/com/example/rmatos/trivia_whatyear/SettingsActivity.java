@@ -53,12 +53,13 @@ public class SettingsActivity extends Activity {
         Intent activityThatCalled = getIntent();
 
         String difficulty = activityThatCalled.getExtras().getString("difficulty");
+        System.out.println("test2: "+difficulty);
 
-        if (difficulty.equals("EASY")) {
+        if (difficulty.equals("Easy")) {
             spinner_difficulty.setSelection(0);
-        } else if (difficulty.equals("NORMAL")) {
+        } else if (difficulty.equals("Normal")) {
             spinner_difficulty.setSelection(1);
-        } else if (difficulty.equals("HARD")) {
+        } else if (difficulty.equals("Hard")) {
             spinner_difficulty.setSelection(2);
         }
 

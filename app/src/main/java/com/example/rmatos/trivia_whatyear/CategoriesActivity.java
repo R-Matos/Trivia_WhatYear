@@ -72,6 +72,8 @@ public class CategoriesActivity extends Activity {
 
     }
 
+
+
     @Override
     public void onBackPressed() {
         Intent goingBack = new Intent();
@@ -81,7 +83,6 @@ public class CategoriesActivity extends Activity {
         setResult(RESULT_OK, goingBack);
         finish();
     }
-
 
     private void populateListView()
     {
