@@ -5,17 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tw_instructions"
-        android:text="Select the categories you want"
+    <LinearLayout
+        android:id="@+id/linear_layout_categories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding">
+
+        <TextView
+            android:id="@+id/tw_instructions"
+            android:text="Select the categories you want"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"
+            android:layout_weight="2" />
+
+        <Button
+            android:id="@+id/onSelectAll"
+            android:text="@string/enable_all"
+            android:onClick="onEnableAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3" />
+
+        <Button
+            android:id="@+id/onDisableAll"
+            android:text="@string/disable_all"
+            android:onClick="onDisableAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/categories_separator"
+        android:background="@android:color/black"
+        android:layout_marginLeft="@dimen/padding"
+        android:layout_marginRight="@dimen/padding"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_heading_separator_size"
+        android:layout_below="@id/linear_layout_categories"
+        android:layout_marginTop="@dimen/settings_heading_separator_padding"/>
+
+
 
     <ExpandableListView
         android:id="@+id/expandListView_categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tw_instructions"/>
+        android:padding="@dimen/padding"
+        android:layout_below="@+id/categories_separator"/>
 
 
 </RelativeLayout>

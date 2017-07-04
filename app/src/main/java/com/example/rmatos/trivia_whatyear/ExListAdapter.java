@@ -34,6 +34,10 @@ public class ExListAdapter extends BaseExpandableListAdapter {
         return cbStates;
     }
 
+    public void setCbState(CbCategoriesState cbStates) {
+        this.cbStates = cbStates;
+    }
+
     //Number of parents (group == parent)
     @Override
     public int getGroupCount() {

@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class CategoriesActivity extends Activity {
     private List<String> themes;                                                                            //Parent
     private Map<String, List<String>> categories;                                                           //Parent + child
     private CbCategoriesState cbStates;
+    private boolean[] groupLongClickState = new boolean[CbCategoriesState.parentSize];
 
 
 
@@ -38,37 +41,86 @@ public class CategoriesActivity extends Activity {
 
         //Sets up expandable list view
         expandableListView = (ExpandableListView) findViewById(R.id.expandListView_categories);
+
         populateListView();
+        resetView();
+        setListeners();
+    }
+
+    public void resetView() {
         listAdapter = new ExListAdapter(this, themes, categories, cbStates);
         expandableListView.setAdapter(listAdapter);
+    }
 
-//        //DOESNT WORK
-//        expandableListView
-//                .setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//                    @Override
-//                    public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
-//                        //CheckBox cb = (CheckBox) view.findViewById(R.id.categories_list_child_checkbox);
-//
-////                        if (cb.isChecked()) {
-////                            System.out.println(childPosition);
-////                        }
-//
-//                        System.out.println(groupPosition+childPosition);
-//
-//
-//                        return false;
-//                    }
-//                });
-//        //TODO: Add long click listener = http://www.vogella.com/tutorials/AndroidListView/article.html#listadvanced_interactive
-//        //WORKS
-//        expandableListView
-//                .setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-//                    @Override
-//                    public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-//                        System.out.println("OUT :: "+ i + ", "+l);
-//                        return false;
-//                    }
-//                });
+    //Enables all choiceboxes and resets UI
+    public void onEnableAll(View view) {
+        cbStates =  new CbCategoriesState(true);
+        resetView();
+    }
+
+    //Disables all choiceboxes and resets UI
+    public void onDisableAll(View view) {
+        cbStates =  new CbCategoriesState(false);
+        resetView();
+    }
+
+    private void setListeners() {
+
+/*        //Parent
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                    @Override
+                    public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+                        System.out.println("OUT :: "+ i + ", "+l);
+                        return false;
+                    }
+                });*/
+
+        //Long click listener. Disables/Enables group
+        expandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                //Below gets group position from
+                long packedPosition = expandableListView.getExpandableListPosition(position);
+                //int itemType = expandableListView.getPackedPositionType(packedPosition);
+                //int childPosition = expandableListView.getPackedPositionChild(packedPosition);
+                int groupPosition = expandableListView.getPackedPositionGroup(packedPosition);
+
+
+                //Below for only when parent is selected. Used to differentiate between parent and child
+                CheckBox cb = (CheckBox) view.findViewById(R.id.categories_list_child_checkbox);
+                cbStates = listAdapter.getCbStates();
+                if (cb == null) {
+                    //Resets checkboxes in group
+                    boolean changedState = (groupLongClickState[groupPosition]) ? false : true;
+                    cbStates.setGroup(groupPosition, changedState);
+                    groupLongClickState[groupPosition] = changedState;
+
+                    resetView();
+                }
+
+                return true;
+            }
+        });
+
+        //Child. Enables and disables checkboxes when clicked
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                    @Override
+                    public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
+
+                        CheckBox cb = (CheckBox) view.findViewById(R.id.categories_list_child_checkbox);
+
+                        boolean changedState = (cb.isChecked()) ? false : true;
+
+                        cb.setChecked(changedState);
+                        cbStates.setValue(groupPosition, childPosition, changedState);
+                        listAdapter.setCbState(cbStates);
+
+
+                        return false;
+                    }
+                });
+        //TODO: Add long click listener = http://www.vogella.com/tutorials/AndroidListView/article.html#listadvanced_interactive
 
     }
 
@@ -88,7 +140,6 @@ public class CategoriesActivity extends Activity {
     {
         themes = new ArrayList<>();
         categories = new HashMap<>();
-
 
         //Populate parents
         themes.add("Conflict & War");
@@ -197,39 +248,12 @@ public class CategoriesActivity extends Activity {
         categories.put(themes.get(6), worldPolitics);
         categories.put(themes.get(7), royalty);
         categories.put(themes.get(8), society);
+
+        //Initialise groupLongClickState array
+        for (int i = 0; i < groupLongClickState.length; i++) {
+            groupLongClickState[i] = true;
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

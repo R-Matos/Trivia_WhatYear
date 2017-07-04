@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
         if (categoriesState == null) {
-            categoriesState = new CbCategoriesState();
+            categoriesState = new CbCategoriesState(true);
         }
 
     }

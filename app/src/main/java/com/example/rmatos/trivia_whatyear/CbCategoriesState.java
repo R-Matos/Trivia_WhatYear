@@ -9,22 +9,24 @@ import java.io.Serializable;
 public class CbCategoriesState implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static int parentSize = 9;
-    private static int childSize = 13;
+    public final static int parentSize = 9;
+    public final static int childSize = 13;
     private boolean[][] array;
 
 
 
-    public CbCategoriesState() {
+    public CbCategoriesState(boolean defaultState) {
 
         array = new boolean[parentSize][childSize];
 
         for (int i = 0; i < parentSize; i++) {
             for (int j = 0; j < childSize; j++) {
-                this.array[i][j] = true;
+                this.array[i][j] = defaultState;
             }
         }
     }
+
+
 
     public void setValue(int parent, int child, boolean state) {
         this.array[parent][child] = state;
@@ -32,6 +34,13 @@ public class CbCategoriesState implements Serializable {
 
     public boolean getValue(int parent, int child) {
         return this.array[parent][child];
+    }
+
+    public void setGroup(int groupPosition, boolean value) {
+
+        for (int j = 0; j < childSize; j++) {
+            array[groupPosition][j] = value;
+        }
     }
 
     @Override
@@ -63,7 +72,7 @@ public class CbCategoriesState implements Serializable {
 
     public static CbCategoriesState Deserialize(String serializedString) {
 
-        CbCategoriesState obj = new CbCategoriesState();
+        CbCategoriesState obj = new CbCategoriesState(true);
 
         //Default
 
