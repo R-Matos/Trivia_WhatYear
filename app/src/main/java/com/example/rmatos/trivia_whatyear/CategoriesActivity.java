@@ -18,50 +18,57 @@ import java.util.Map;
 
 public class CategoriesActivity extends Activity {
 
-    ExpandableListView expandableListView;
-    ExpandableListAdapter listAdapter;
-    List<String> themes;                                                                            //Parent
-    Map<String, List<String>> categories;                                                           //Parent + child
+    private ExpandableListView expandableListView;
+    private ExListAdapter listAdapter;
+    private List<String> themes;                                                                            //Parent
+    private Map<String, List<String>> categories;                                                           //Parent + child
+    private CbCategoriesState cbStates;
 
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        //Setsup view
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
+        //Gets data passed from previous activity
+        Intent activityThatCalled = getIntent();
+        cbStates = (CbCategoriesState) activityThatCalled.getSerializableExtra("cbStates");
+
+        //Sets up expandable list view
         expandableListView = (ExpandableListView) findViewById(R.id.expandListView_categories);
         populateListView();
-        listAdapter = new ExListAdapter(this, themes, categories);
+        listAdapter = new ExListAdapter(this, themes, categories, cbStates);
         expandableListView.setAdapter(listAdapter);
 
-        //DOESNT WORK
-        expandableListView
-                .setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                    @Override
-                    public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
-                        //CheckBox cb = (CheckBox) view.findViewById(R.id.categories_list_child_checkbox);
-
-//                        if (cb.isChecked()) {
-//                            System.out.println(childPosition);
-//                        }
-
-                        System.out.println(groupPosition+childPosition);
-
-
-                        return false;
-                    }
-                });
-        //TODO: Add long click listener = http://www.vogella.com/tutorials/AndroidListView/article.html#listadvanced_interactive
-        //WORKS
-        expandableListView
-                .setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                    @Override
-                    public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                        System.out.println("OUT :: "+ i + ", "+l);
-                        return false;
-                    }
-                });
+//        //DOESNT WORK
+//        expandableListView
+//                .setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//                    @Override
+//                    public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
+//                        //CheckBox cb = (CheckBox) view.findViewById(R.id.categories_list_child_checkbox);
+//
+////                        if (cb.isChecked()) {
+////                            System.out.println(childPosition);
+////                        }
+//
+//                        System.out.println(groupPosition+childPosition);
+//
+//
+//                        return false;
+//                    }
+//                });
+//        //TODO: Add long click listener = http://www.vogella.com/tutorials/AndroidListView/article.html#listadvanced_interactive
+//        //WORKS
+//        expandableListView
+//                .setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+//                    @Override
+//                    public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+//                        System.out.println("OUT :: "+ i + ", "+l);
+//                        return false;
+//                    }
+//                });
 
     }
 
@@ -69,7 +76,7 @@ public class CategoriesActivity extends Activity {
     public void onBackPressed() {
         Intent goingBack = new Intent();
 
-        goingBack.putExtra("ph", "ph");
+        goingBack.putExtra("cbStates", listAdapter.getCbStates());
 
         setResult(RESULT_OK, goingBack);
         finish();

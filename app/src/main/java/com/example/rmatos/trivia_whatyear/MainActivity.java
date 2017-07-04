@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     private static String name;
     private static String email;
     private static Map<String, List<String>> cbCategoriesStates;                                    //Parent + child
+    private static CbCategoriesState categoriesState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             isVibrationOn = savedInstanceState.getBoolean("vibration");
             name = savedInstanceState.getString("name");
             email = savedInstanceState.getString("email");
+        }
+
+        //TODO: Implement serializable for below
+        if (categoriesState == null) {
+            categoriesState = new CbCategoriesState();
         }
     }
 
@@ -105,12 +111,16 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //Settings activity
         difficulty = data.getStringExtra("difficulty");
         isMusicOn = data.getBooleanExtra("music", false);
         isSoundsOn = data.getBooleanExtra("sound", false);
         isVibrationOn = data.getBooleanExtra("vibration", false);
         name = data.getStringExtra("name");
         email = data.getStringExtra("email");
+
+        //Categories activity
+        categoriesState = (CbCategoriesState) data.getSerializableExtra("cbStates");
     }
 
     //If OS crashes or orientation change saves state
@@ -150,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         Intent getCategoriesScreenIntent = new Intent(this, CategoriesActivity.class);
         final int result = 1;
+
+        getCategoriesScreenIntent.putExtra("cbStates", categoriesState);
 
         startActivityForResult(getCategoriesScreenIntent, result);
     }

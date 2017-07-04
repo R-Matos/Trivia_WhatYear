@@ -20,25 +20,18 @@ public class ExListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> themes;
     private Map<String, List<String>> categories;
-    private boolean[][] cbStates;
+    private CbCategoriesState cbStates;
 
 
-    public ExListAdapter(Context context, List<String> themes, Map<String, List<String>> categories) {
+    public ExListAdapter(Context context, List<String> themes, Map<String, List<String>> categories, CbCategoriesState cbStates) {
         this.context = context;
         this.themes = themes;
         this.categories = categories;
-
-        cbStates = new boolean[9][13];
-        tempMethod();                                                                               //TODO: REMOVE
+        this.cbStates = cbStates;
     }
 
-    private void tempMethod() {
-
-        for (int i = 0; i <= 8; i++) {
-            for (int j = 0; j <= 12; j++) {
-                cbStates[i][j] = false;
-            }
-        }
+    public CbCategoriesState getCbStates() {
+        return cbStates;
     }
 
     //Number of parents (group == parent)
@@ -122,13 +115,13 @@ public class ExListAdapter extends BaseExpandableListAdapter {
         CheckBox cb = (CheckBox) convertView.findViewById(R.id.categories_list_child_checkbox);
 
         //Sets checkboxes to current state
-        cb.setChecked(cbStates[groupPosition][childPosition] == true);
+        cb.setChecked(cbStates.getValue(groupPosition, childPosition));
 
         //EventListener for checkboxes
         cb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 final CheckBox cb = (CheckBox) view;
-                cbStates[groupPosition][childPosition] = cb.isChecked();
+                cbStates.setValue(groupPosition, childPosition, cb.isChecked());
             }
         });
 
