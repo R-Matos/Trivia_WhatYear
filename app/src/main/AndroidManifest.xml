@@ -28,6 +28,11 @@
             android:theme="@style/AppTheme"
             />
 
+        <activity android:name=".PlayActivity"
+            android:label="play_activity"
+            android:theme="@style/AppTheme"
+            />
+
     </application>
 
 </manifest>

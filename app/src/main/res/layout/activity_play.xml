@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_play_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/darker_gray">
+
+        <TextView
+            android:id="@+id/tw_question_status"
+            android:text="Q1 of 20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tw_play_instructions"
+        android:text="What year was the below article written:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_layout_play_topbar"
+        android:gravity="center"
+        android:padding="@dimen/padding"
+        />
+
+    <TextView
+        android:id="@+id/tw_question"
+        android:text="question placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tw_play_instructions"
+        android:gravity="center"
+        android:padding="@dimen/padding"
+        />
+
+    <ProgressBar
+        android:id="@+id/play_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tw_question"/>
+
+    <TextView
+        android:id="@+id/tw_time"
+        android:text="15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tw_question"
+        android:paddingTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"/>
+
+    <ToggleButton
+        android:id="@+id/btn_answer_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tw_time"/>
+
+    <ToggleButton
+        android:id="@+id/btn_answer_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_answer_1"/>
+
+    <ToggleButton
+        android:id="@+id/btn_answer_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_answer_2"/>
+
+    <ToggleButton
+        android:id="@+id/btn_answer_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_answer_3"/>
+
+
+    <LinearLayout
+        android:id="@+id/linear_layout_play_bottombar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/darker_gray"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:onClick="onPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/back_icon"
+            />
+
+        <TextView
+            android:onClick="onPrevious"
+            android:text="PREVIOUS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:onClick="onSkip"
+            android:text="SKIP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="right"
+            />
+
+        <ImageView
+            android:onClick="onSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/skip_icon"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</RelativeLayout>

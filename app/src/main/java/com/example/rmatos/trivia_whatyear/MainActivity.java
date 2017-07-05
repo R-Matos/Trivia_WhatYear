@@ -10,15 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /** RESOURCES
  * https://tvnews.vanderbilt.edu/explore_category?category=war
  * https://www.infoplease.com/yearbyyear
  * http://news.bbc.co.uk/onthisday/hi/years/default.stm
  */
-public class MainActivity extends AppCompatActivity implements Serializable {
+public class MainActivity extends AppCompatActivity {
 
     private static final int SETTINGS_INFO = 1;
     private static String difficulty;
@@ -27,7 +25,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     private static boolean isVibrationOn;
     private static String name;
     private static String email;
-    private static CbCategoriesState categoriesState;
+    private static Categories categories;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
     }
-
 
     private void getPreviouslySavedData(Bundle savedInstanceState) {
 
@@ -62,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             System.out.println("Email: " +email);
 
             if (!str.equals("")) {
-                categoriesState = CbCategoriesState.Deserialize(str);
+                categories = Categories.Deserialize(str);
             }
 
         } else {
@@ -72,16 +70,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             isVibrationOn = savedInstanceState.getBoolean("vibration");
             name = savedInstanceState.getString("name");
             email = savedInstanceState.getString("email");
-            categoriesState = CbCategoriesState.Deserialize(savedInstanceState.getString("categoriesState"));
+            categories = Categories.Deserialize(savedInstanceState.getString("categoriesState"));
         }
 
-        if (categoriesState == null) {
-            categoriesState = new CbCategoriesState(true);
+        if (categories == null) {
+            categories = new Categories(true);
         }
 
     }
-
-
 
     //Inflates menu
     @Override
@@ -117,12 +113,27 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         return super.onOptionsItemSelected(item);
     }
 
+
+    //Play button clicked
+    public void onPlay(View view) {
+
+        Intent getCategoriesScreenIntent = new Intent(this, PlayActivity.class);
+        final int result = 3;
+
+        getCategoriesScreenIntent.putExtra("difficulty", difficulty);
+        getCategoriesScreenIntent.putExtra("cbStates", categories);
+
+        startActivityForResult(getCategoriesScreenIntent, result);
+    }
+
+
+    //Category button clicked
     public void onCategory(View view) {
 
         Intent getCategoriesScreenIntent = new Intent(this, CategoriesActivity.class);
         final int result = 2;
 
-        getCategoriesScreenIntent.putExtra("cbStates", categoriesState);
+        getCategoriesScreenIntent.putExtra("cbStates", categories);
 
         startActivityForResult(getCategoriesScreenIntent, result);
     }
@@ -144,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         //Categories activity
         if (requestCode == 2) {
-            categoriesState = (CbCategoriesState) data.getSerializableExtra("cbStates");
+            categories = (Categories) data.getSerializableExtra("cbStates");
         }
     }
 
@@ -158,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         outState.putBoolean("vibration", isVibrationOn);
         outState.putString("name", email);
         outState.putString("email", name);
-        outState.putString("categoriesState", CbCategoriesState.Serialize(categoriesState));
+        outState.putString("categoriesState", Categories.Serialize(categories));
 
         super.onSaveInstanceState(outState);
     }
@@ -174,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         sPEditor.putBoolean("vibration", isVibrationOn);
         sPEditor.putString("name", email);
         sPEditor.putString("email", name);
-        sPEditor.putString("categoriesState", CbCategoriesState.Serialize(categoriesState));
+        sPEditor.putString("categoriesState", Categories.Serialize(categories));
 
         sPEditor.commit();
         super.onStop();

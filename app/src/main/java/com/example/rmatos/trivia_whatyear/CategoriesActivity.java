@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +23,8 @@ public class CategoriesActivity extends Activity {
     private ExListAdapter listAdapter;
     private List<String> themes;                                                                            //Parent
     private Map<String, List<String>> categories;                                                           //Parent + child
-    private CbCategoriesState cbStates;
-    private boolean[] groupLongClickState = new boolean[CbCategoriesState.parentSize];
+    private Categories cbStates;
+    private boolean[] groupLongClickState = new boolean[Categories.parentSize];
 
 
 
@@ -37,7 +36,7 @@ public class CategoriesActivity extends Activity {
 
         //Gets data passed from previous activity
         Intent activityThatCalled = getIntent();
-        cbStates = (CbCategoriesState) activityThatCalled.getSerializableExtra("cbStates");
+        cbStates = (Categories) activityThatCalled.getSerializableExtra("cbStates");
 
         //Sets up expandable list view
         expandableListView = (ExpandableListView) findViewById(R.id.expandListView_categories);
@@ -54,26 +53,17 @@ public class CategoriesActivity extends Activity {
 
     //Enables all choiceboxes and resets UI
     public void onEnableAll(View view) {
-        cbStates =  new CbCategoriesState(true);
+        cbStates =  new Categories(true);
         resetView();
     }
 
     //Disables all choiceboxes and resets UI
     public void onDisableAll(View view) {
-        cbStates =  new CbCategoriesState(false);
+        cbStates =  new Categories(false);
         resetView();
     }
 
     private void setListeners() {
-
-/*        //Parent
-        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                    @Override
-                    public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                        System.out.println("OUT :: "+ i + ", "+l);
-                        return false;
-                    }
-                });*/
 
         //Long click listener. Disables/Enables group
         expandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

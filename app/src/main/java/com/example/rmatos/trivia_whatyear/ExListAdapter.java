@@ -20,21 +20,21 @@ public class ExListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> themes;
     private Map<String, List<String>> categories;
-    private CbCategoriesState cbStates;
+    private Categories cbStates;
 
 
-    public ExListAdapter(Context context, List<String> themes, Map<String, List<String>> categories, CbCategoriesState cbStates) {
+    public ExListAdapter(Context context, List<String> themes, Map<String, List<String>> categories, Categories cbStates) {
         this.context = context;
         this.themes = themes;
         this.categories = categories;
         this.cbStates = cbStates;
     }
 
-    public CbCategoriesState getCbStates() {
+    public Categories getCbStates() {
         return cbStates;
     }
 
-    public void setCbState(CbCategoriesState cbStates) {
+    public void setCbState(Categories cbStates) {
         this.cbStates = cbStates;
     }
 
