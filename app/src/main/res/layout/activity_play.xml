@@ -44,21 +44,32 @@
         android:padding="@dimen/padding"
         />
 
-    <ProgressBar
-        android:id="@+id/play_progress_bar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tw_question"/>
+        android:gravity="center"
+        android:layout_below="@id/tw_question">
+
+            <ProgressBar
+                android:id="@+id/play_progress_bar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/tw_question"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/circular_progress_bar_blue"
+                android:background="@drawable/circular_background"
+                style="?android:attr/progressBarStyleHorizontal"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tw_time"
-        android:text="15"
+        android:text="20"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tw_question"
         android:paddingTop="16dp"
         android:layout_marginBottom="16dp"
-        android:gravity="center"/>
+        android:gravity="center" />
 
     <ToggleButton
         android:id="@+id/btn_answer_1"

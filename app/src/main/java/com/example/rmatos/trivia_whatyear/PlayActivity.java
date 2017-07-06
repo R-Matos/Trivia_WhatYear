@@ -1,12 +1,21 @@
 package com.example.rmatos.trivia_whatyear;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,13 +42,17 @@ public class PlayActivity extends Activity {
     private Button btnAnswer3;
     private Button btnAnswer4;
 
-
     private final int numberOfQuestions = 20;
+    private final int timeLimit = 20;
     private String difficulty;
     private Categories categories;
     private DataBaseHelper myDbHelper;
     private ArrayList<String> questions = new ArrayList<>();
     private int currentQuestionPos = 0;
+
+    private boolean resetProgressBar;
+    private int timeCounter;
+    private boolean isCircleRed;
 
 
 
@@ -106,12 +119,17 @@ public class PlayActivity extends Activity {
     private void nextQuestion() {
 
         //Updates question status (top-bar)
-        twQuestionStatus.setText("Q" + currentQuestionPos+1 + " of " + numberOfQuestions);
+        twQuestionStatus.setText("Q " + currentQuestionPos+1 + " of " + numberOfQuestions);
 
         //Updates question text
         twQuestion.setText(questions.get(currentQuestionPos));
 
-        //
+        //Reset timer
+
+//        progressBar.setVisibility(View.VISIBLE);
+
+        progressBar.setProgress(180);
+//        progressBar.setSecondaryProgress(10);
 
 
         //reset timer bar
@@ -168,7 +186,7 @@ public class PlayActivity extends Activity {
 
         //Random number generator
         Random rand = new Random();
-        int randomNumber = rand.nextInt(possibleQuestions.size());
+        int randomNumber = rand.nextInt(possibleQuestions.size()-2);
 
         //Adds a question from possibleQuestions to question array.
         for (int i = 0; i < numberOfQuestions; i++) {
@@ -180,10 +198,107 @@ public class PlayActivity extends Activity {
     }
 
     public void onPrevious(View view) {
+
+        resetProgressBar = true;
+
+        //Waits till previous thread has ended
+        while (resetProgressBar) {}
+
+        onStart();
     }
 
     public void onSkip(View view) {
+        onStop();
     }
+
+
+
+
+
+
+    //Progress bar thread
+    public void onStart() {
+        super.onStart();
+
+        final int iterations = timeLimit * 100;
+        progressBar.setMax(iterations);
+
+        //Below Resets Variables
+        timeCounter = timeLimit;
+        twProgressTime.setText(String.valueOf(timeCounter));
+
+        progressBar.setProgress(1);
+        resetProgressBar = false;
+
+        Rect bounds = progressBar.getProgressDrawable().getBounds();
+        progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.circular_progress_bar_blue));
+        progressBar.getProgressDrawable().setBounds(bounds);
+        isCircleRed = false;
+
+        final Thread background = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    test: for (int i = 1; i <= iterations; i++) {
+
+                        Thread.sleep(iterations / (iterations/10));
+
+                        //Ends thread if required to reset
+                        if (!resetProgressBar) {
+                            //Increments progress counter
+                            handler.sendEmptyMessage(0);
+
+                            //Decrements text time counter
+                            if (i % 100 == 0)
+                                handler.sendEmptyMessage(1);
+
+                            //Progress bar turns red
+                            if (i >= 1500 && !isCircleRed)
+                                handler.sendEmptyMessage(2);
+                        } else {
+                            i = iterations;
+                        }
+                    }
+                }
+                catch(Throwable t) {
+                    // just end the background thread
+                }
+                Log.i("Play, PBar Thread","Thread End");
+                resetProgressBar = false;
+            }
+        });
+
+        background.start();
+    }
+
+    //Handler for progress bar thread
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+            if (msg.what == 0)
+            {
+                progressBar.incrementProgressBy(1);
+            }
+            else if (msg.what == 1)
+            {
+                timeCounter--;
+                twProgressTime.setText(String.valueOf(timeCounter));
+            }
+            else if (msg.what == 2)
+            {
+                Rect bounds = progressBar.getProgressDrawable().getBounds();
+                progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.circular_progress_bar_red));
+                progressBar.getProgressDrawable().setBounds(bounds);
+                isCircleRed = true;
+            }
+        }
+    };
+
+
+
+
+
+
 
 
 
