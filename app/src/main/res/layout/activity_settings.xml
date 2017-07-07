@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
     android:padding="@dimen/padding">
 
 
@@ -12,16 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/settings_headings"
-        android:textColor="@android:color/black"/>
+        android:textColor="@color/orange"/>
 
     <View
         android:id="@+id/separator_1"
-        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_heading_separator_size"
         android:layout_below="@id/tw_heading_gameOptions"
         android:layout_marginTop="@dimen/settings_heading_separator_padding"
-        android:layout_marginBottom="@dimen/settings_heading_separator_padding" />
+        android:layout_marginBottom="@dimen/settings_heading_separator_padding"
+        android:minHeight="50dp"
+        android:background="@android:color/black"
+        />
 
     <LinearLayout
         android:id="@+id/linear_layout_difficulty"
@@ -37,8 +41,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/settings_subheading_size"
-            android:textColor="@android:color/black"
-            android:layout_weight="1"/>
+            android:textColor="@color/dark_green"
+            android:layout_weight="1"
+            />
 
         <Spinner
             android:id="@+id/spinner_difficulty"
@@ -52,7 +57,7 @@
 
     <View
         android:id="@+id/separator_2"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_separator_size"
         android:layout_below="@id/linear_layout_difficulty"
@@ -66,12 +71,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/separator_2"
+        android:textColor="@color/dark_green"
         android:textSize="@dimen/settings_subheading_size"
-        android:paddingLeft="@dimen/settings_indent"/>
+        android:paddingLeft="@dimen/settings_indent"
+        android:theme="@style/SettingsSwitch"/>
 
     <View
         android:id="@+id/separator_3"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_separator_size"
         android:layout_below="@id/switch_music"
@@ -86,11 +93,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/separator_3"
         android:textSize="@dimen/settings_subheading_size"
-        android:paddingLeft="@dimen/settings_indent"/>
+        android:paddingLeft="@dimen/settings_indent"
+        android:textColor="@color/dark_green"
+        android:theme="@style/SettingsSwitch"/>
 
     <View
         android:id="@+id/separator_4"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_separator_size"
         android:layout_below="@id/switch_sound"
@@ -105,11 +114,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/separator_4"
         android:textSize="@dimen/settings_subheading_size"
-        android:paddingLeft="@dimen/settings_indent" />
+        android:paddingLeft="@dimen/settings_indent"
+        android:textColor="@color/dark_green"
+        android:theme="@style/SettingsSwitch"/>
 
     <View
         android:id="@+id/separator_5"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_separator_size"
         android:layout_below="@id/switch_vibration"
@@ -125,7 +136,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/separator_5"
         android:textSize="@dimen/settings_headings"
-        android:textColor="@android:color/black"
+        android:textColor="@color/orange"
         android:paddingTop="@dimen/padding"/>
 
     <View
@@ -154,22 +165,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/settings_subheading_size"
-            android:textColor="@android:color/black"
+            android:textColor="@color/dark_green"
             android:layout_weight="2"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical" />
 
         <EditText
             android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:gravity="center"/>
 
     </LinearLayout>
 
     <View
         android:id="@+id/separator_7"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_separator_size"
         android:layout_below="@id/linear_layout_name"
@@ -193,7 +205,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/settings_subheading_size"
-            android:textColor="@android:color/black"
+            android:textColor="@color/dark_green"
             android:layout_weight="2"
             android:layout_gravity="center_vertical"/>
 
@@ -202,12 +214,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:gravity="center"/>
     </LinearLayout>
 
     <View
         android:id="@+id/separator_8"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_separator_size"
         android:layout_below="@id/linear_layout_email"
@@ -223,7 +236,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/separator_8"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:background="@color/orange"/>
 
 
 </RelativeLayout>

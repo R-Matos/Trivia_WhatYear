@@ -2,7 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey">
 
     <LinearLayout
         android:id="@+id/linear_layout_play_topbar"
@@ -10,56 +11,44 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
-        android:background="@android:color/darker_gray">
+        android:background="@color/dark_green">
 
         <TextView
             android:id="@+id/tw_question_status"
             android:text="Q1 of 20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
+            android:textColor="#C1E1A6"
             android:gravity="center"
             />
 
     </LinearLayout>
 
 
+
+
     <TextView
-        android:id="@+id/tw_play_instructions"
-        android:text="What year was the below article written:"
+        android:id="@+id/tw_category"
+        android:text="category placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout_play_topbar"
+        android:layout_marginTop="50dp"
         android:gravity="center"
-        android:padding="@dimen/padding"
-        />
+        android:textColor="@color/orange" />
+
 
     <TextView
         android:id="@+id/tw_question"
         android:text="question placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tw_play_instructions"
+        android:layout_below="@id/tw_category"
         android:gravity="center"
+        android:textColor="@color/orange"
         android:padding="@dimen/padding"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_below="@id/tw_question">
-
-            <ProgressBar
-                android:id="@+id/play_progress_bar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_below="@id/tw_question"
-                android:indeterminate="false"
-                android:progressDrawable="@drawable/circular_progress_bar_blue"
-                android:background="@drawable/circular_background"
-                style="?android:attr/progressBarStyleHorizontal"/>
-    </LinearLayout>
+        android:textStyle="bold"
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/tw_time"
@@ -67,33 +56,145 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tw_question"
-        android:paddingTop="16dp"
+        android:paddingTop="27dp"
         android:layout_marginBottom="16dp"
+        android:textColor="@color/dark_green"
         android:gravity="center" />
 
-    <ToggleButton
-        android:id="@+id/btn_answer_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tw_time"/>
 
-    <ToggleButton
-        android:id="@+id/btn_answer_2"
+    <LinearLayout
+        android:id="@+id/linear_layout_help_toolbar"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_answer_1"/>
+        android:layout_below="@id/tw_question"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
 
-    <ToggleButton
-        android:id="@+id/btn_answer_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_answer_2"/>
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:src="@drawable/toolbar_audience"
+            android:layout_marginRight="20dp"/>
 
-    <ToggleButton
-        android:id="@+id/btn_answer_4"
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/toolbar_5050"
+            android:layout_marginRight="10dp"/>
+
+        <ProgressBar
+            android:id="@+id/play_progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/tw_question"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/circular_progress_bar_blue"
+            android:background="@drawable/circular_background"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="20dp"
+            style="?android:attr/progressBarStyleHorizontal"/>
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/toolbar_phone_call"
+            android:layout_marginRight="20dp"/>
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/toolbar_freeze_time"
+
+            android:layout_marginRight="10dp"/>
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tw_instructions"
+        android:text="What year was the article published:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_answer_3"/>
+        android:layout_below="@id/linear_layout_help_toolbar"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:paddingBottom="5dp"/>
+
+
+    <View
+        android:id="@+id/answer_button_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </View>
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:fillViewport="true"
+        android:scrollbars = "vertical"
+        android:scrollbarStyle="insideInset"
+        android:layout_below="@id/tw_instructions">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ToggleButton
+                android:id="@+id/btn_answer_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tw_instructions"
+                android:layout_marginLeft="@dimen/padding"
+                android:layout_marginRight="@dimen/padding"
+                android:textSize="20dp"/>
+
+            <ToggleButton
+                android:id="@+id/btn_answer_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_answer_1"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="@dimen/padding"
+                android:layout_marginRight="@dimen/padding"
+                android:textSize="20dp"/>
+
+            <ToggleButton
+                android:id="@+id/btn_answer_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_answer_2"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="@dimen/padding"
+                android:layout_marginRight="@dimen/padding"
+                android:textSize="20dp"/>
+
+            <ToggleButton
+                android:id="@+id/btn_answer_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_answer_3"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="@dimen/padding"
+                android:layout_marginRight="@dimen/padding"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+
+
+
+
+    </ScrollView>
+
+
 
 
     <LinearLayout
@@ -101,8 +202,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@android:color/darker_gray"
-        android:layout_alignParentBottom="true">
+        android:background="@color/dark_green"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <ImageView
             android:onClick="onPrevious"
@@ -110,6 +213,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/back_icon"
+            android:paddingLeft="10dp"
             />
 
         <TextView
@@ -119,24 +223,35 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
+            android:paddingLeft="10dp"
             />
 
+        <ImageView
+            android:id="@+id/play_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/play_info" />
+
         <TextView
-            android:onClick="onSkip"
-            android:text="SKIP"
+            android:id="@+id/tw_play_submit"
+            android:onClick="onSubmit"
+            android:text="SUBMIT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
+            android:paddingRight="10dp"
             android:gravity="right"
             />
 
         <ImageView
-            android:onClick="onSkip"
+            android:onClick="onSubmit"
+            android:paddingRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/skip_icon"
+            android:src="@drawable/next_icon"
             />
 
 
