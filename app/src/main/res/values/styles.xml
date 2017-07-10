@@ -1,12 +1,13 @@
 <resources>
 
+
+    <!-- Main activity action br -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
 
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
-
     <!-- ACTION BAR STYLES -->
     <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:background">@drawable/transparent</item>
@@ -18,6 +19,7 @@
     </style>
 
 
+    <!-- Settings switch -->
     <style name="SettingsSwitch" parent="Theme.AppCompat.Light">
 
         <!-- active thumb & track color (30% transparency) -->
@@ -28,6 +30,26 @@
 
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">@color/grey</item>
+    </style>
+
+
+
+    <!-- Play activity dialog action br -->
+    <style name="AppTheme2" parent="Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar2</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/MyActionBar2</item>
+    </style>
+
+    <!-- ACTION BAR STYLES -->
+    <style name="MyActionBar2" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@drawable/transparent</item>
+        <item name="android:windowActionBarOverlay">true</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/dark_green</item>
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
 

@@ -1,26 +1,47 @@
 package com.example.rmatos.trivia_whatyear;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -31,18 +52,24 @@ public class PlayActivity extends Activity {
 
     private Context context = this;
 
+    private Dialog dialog;
+
     //View components
-    private TextView twQuestionStatus;
-    private TextView twCategory;
-    private TextView twQuestion;
+    private TextView tvQuestionStatus;
+    private TextView tvCategory;
+    private TextView tvQuestion;
     private ProgressBar progressBar;
-    private TextView twProgressTime;
+    private TextView tvProgressTime;
     private ToggleButton btnAnswer1;
     private ToggleButton btnAnswer2;
     private ToggleButton btnAnswer3;
     private ToggleButton btnAnswer4;
     private View answerButtonView;
-    private TextView twSubmit;
+    private TextView tvSubmit;
+    private ImageView askAudience;
+    private ImageView fiftyfifty;
+    private ImageView browse;
+    private ImageView freezeTime;
 
     //Misc Variables
     private final int numberOfQuestions = 20;
@@ -59,6 +86,13 @@ public class PlayActivity extends Activity {
     private boolean isCircleRed;
     private boolean isProgressBarThreadRunning;
     private boolean clickNextQuestion;
+    private boolean isAskAudienceUsed = false;
+
+    //Lifeline variables
+    private int answer1percentage = 0;
+    private int answer2percentage = 0;
+    private int answer3percentage = 0;
+    private int answer4percentage = 0;
 
 
 
@@ -70,17 +104,25 @@ public class PlayActivity extends Activity {
         setContentView(R.layout.activity_play);
 
         //Makes reference to views
-        twQuestionStatus = (TextView) findViewById(R.id.tw_question_status);
-        twCategory = (TextView) findViewById(R.id.tw_category);
-        twQuestion = (TextView) findViewById(R.id.tw_question);
+        tvQuestionStatus = (TextView) findViewById(R.id.tw_question_status);
+        tvCategory = (TextView) findViewById(R.id.tw_category);
+        tvQuestion = (TextView) findViewById(R.id.tw_question);
         progressBar = (ProgressBar) findViewById(R.id.play_progress_bar);
-        twProgressTime = (TextView) findViewById(R.id.tw_time);
+        tvProgressTime = (TextView) findViewById(R.id.tw_time);
         btnAnswer1 = (ToggleButton) findViewById(R.id.btn_answer_1);
         btnAnswer2 = (ToggleButton) findViewById(R.id.btn_answer_2);
         btnAnswer3 = (ToggleButton) findViewById(R.id.btn_answer_3);
         btnAnswer4 = (ToggleButton) findViewById(R.id.btn_answer_4);
         answerButtonView = findViewById(R.id.answer_button_view);                                   //Needed to refresh buttons (invalidate)
-        twSubmit = (TextView) findViewById(R.id.tw_play_submit);
+        askAudience = (ImageView) findViewById(R.id.play_lifeline_askAudience);
+        fiftyfifty = (ImageView) findViewById(R.id.play_lifeline_5050);
+        browse = (ImageView) findViewById(R.id.play_lifeline_browse);
+        freezeTime = (ImageView) findViewById(R.id.play_lifeline_freezeTime);
+
+
+
+
+        tvSubmit = (TextView) findViewById(R.id.tw_play_submit);
 
         btnAnswer1.setOnCheckedChangeListener(answerListener);
         btnAnswer2.setOnCheckedChangeListener(answerListener);
@@ -147,13 +189,13 @@ public class PlayActivity extends Activity {
         startProgressBar();
 
         //Updates question status (top-bar)
-        twQuestionStatus.setText("Q " + currentQuestionPos + " of " + numberOfQuestions);
+        tvQuestionStatus.setText("Q " + currentQuestionPos + " of " + numberOfQuestions);
 
         //Updates category
-        twCategory.setText(questions.get(currentQuestionPos).getCategory());
+        tvCategory.setText(questions.get(currentQuestionPos).getCategory());
 
         //Updates question text
-        twQuestion.setText(questions.get(currentQuestionPos).getQuestion());
+        tvQuestion.setText(questions.get(currentQuestionPos).getQuestion());
 
         //Updates buttons
             //Removes any highlighting/backround change
@@ -177,12 +219,12 @@ public class PlayActivity extends Activity {
 //        String tempString="Copyright";
 //        SpannableString spanString = new SpannableString(tempString);
 //        spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-//        btnAnswer1.setText(spanString);
+//        btnAnswer1.setText(spanString)
 
         //Animations (slide in)
-        animate(twCategory, R.anim.in_right_to_left);
-        animate(twQuestion, R.anim.in_left_to_right);
-        animate(twSubmit, R.anim.in_left_to_right);
+        animate(tvCategory, R.anim.in_right_to_left);
+        animate(tvQuestion, R.anim.in_left_to_right);
+        animate(tvSubmit, R.anim.in_left_to_right);
 
 
 
@@ -347,6 +389,143 @@ public class PlayActivity extends Activity {
     }
 
 
+    public void onAskAudience(View view) {
+
+        Question question = questions.get(currentQuestionPos);
+
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);                                       //Removes action bar
+        dialog.setContentView(R.layout.play_ask_audience);
+
+
+        if (isAskAudienceUsed == false) {
+
+            isAskAudienceUsed = true;
+
+            boolean isAudienceCorrect = true;
+            int buttonWithCorrectAnswer = 0;
+
+            Random rand = new Random();
+            int range = 0;
+
+            range = rand.nextInt(10);//0-9
+
+            //Determine whether the highest percentage will be the answer                               //Note 25% chance to be correct if selected wrong on if statement below
+            if (difficulty.equals("Easy")) {                                                            //90% chance to be correct
+                isAudienceCorrect = (range >= 2) ? true : false;
+            } else if (difficulty.equals("Normal")) {                                                   //80% chance to be correct
+                isAudienceCorrect = (range >= 3) ? true : false;
+            } else if (difficulty.equals("Hard")) {                                                     //70% chance to be correct
+                isAudienceCorrect = (range >= 4) ? true : false;
+            } else {
+                Log.wtf("PlayActivity,onAskAudience", "Invalid difficulty");
+            }
+
+
+            //Determines which button will contain correct answer
+            if (isAudienceCorrect == true) {
+                if (question.getPossibleAnswer1() == question.getYear()) {
+                    buttonWithCorrectAnswer = 1;
+                } else if (question.getPossibleAnswer2() == question.getYear()){
+                    buttonWithCorrectAnswer = 2;
+                } else if (question.getPossibleAnswer3() == question.getYear()){
+                    buttonWithCorrectAnswer = 3;
+                } else if (question.getPossibleAnswer4() == question.getYear()){
+                    buttonWithCorrectAnswer = 4;
+                }
+            } else {
+                range = rand.nextInt(4);
+
+                if (range == 0) {
+                    buttonWithCorrectAnswer = 1;
+                } else if (range == 1) {
+                    buttonWithCorrectAnswer = 2;
+                } else if (range == 2) {
+                    buttonWithCorrectAnswer = 3;
+                } else if (range == 3) {
+                    buttonWithCorrectAnswer = 4;
+                }
+            }
+
+
+            range = rand.nextInt(50);
+
+            //Creates percetnaages
+            if (buttonWithCorrectAnswer == 1) {
+                answer1percentage = 100 - range;
+                range = rand.nextInt(100 - answer1percentage);
+                answer2percentage = range;
+                range = rand.nextInt(100 - (answer1percentage + answer2percentage));
+                answer3percentage = range;
+                range = 100 - (answer1percentage + answer2percentage + answer3percentage);
+                answer4percentage = range;
+            } else if (buttonWithCorrectAnswer == 2) {
+                answer2percentage = 100 - range;
+                range = rand.nextInt(100 - answer2percentage);
+                answer1percentage = range;
+                range = rand.nextInt(100 - (answer2percentage + answer1percentage));
+                answer3percentage = range;
+                range = 100 - (answer2percentage + answer1percentage + answer3percentage);
+                answer4percentage = range;
+            } else if (buttonWithCorrectAnswer == 3) {
+                answer3percentage = 100 - range;
+                range = rand.nextInt(100 - answer3percentage);
+                answer1percentage = range;
+                range = rand.nextInt(100 - (answer3percentage + answer1percentage));
+                answer2percentage = range;
+                range = 100 - (answer3percentage + answer1percentage + answer2percentage);
+                answer4percentage = range;
+            } else if (buttonWithCorrectAnswer == 4) {
+                answer4percentage = 100 - range;
+                range = rand.nextInt(100 - answer4percentage);
+                answer1percentage = range;
+                range = rand.nextInt(100 - (answer4percentage + answer1percentage));
+                answer2percentage = range;
+                range = 100 - (answer4percentage + answer1percentage + answer2percentage);
+                answer3percentage = range;
+            }
+
+        } //END OF IF STATEMENT
+
+
+
+        //Initialise chart
+        com.github.mikephil.charting.charts.BarChart chart = new com.github.mikephil.charting.charts.BarChart(dialog.getContext());
+        dialog.setContentView(chart);
+
+        //Chart raw data
+        List<BarEntry> entries = new ArrayList<BarEntry>();
+        entries.add(new BarEntry(answer1percentage, 0));
+        entries.add(new BarEntry(answer2percentage, 2));
+        entries.add(new BarEntry(answer3percentage, 4));
+        entries.add(new BarEntry(answer4percentage, 6));
+
+        //Chart dataset
+        BarDataSet dataset = new BarDataSet(entries, "% of audience answer choice");
+        dataset.setColor(getResources().getColor(R.color.orange));
+
+        //Chart x-axis
+        ArrayList<String> xaxis = new ArrayList<String>();
+        xaxis.add(String.valueOf(question.getPossibleAnswer1()));
+        xaxis.add("");
+        xaxis.add(String.valueOf(question.getPossibleAnswer2()));
+        xaxis.add("");
+        xaxis.add(String.valueOf(question.getPossibleAnswer3()));
+        xaxis.add("");
+        xaxis.add(String.valueOf(question.getPossibleAnswer4()));
+
+        //Create chart
+        BarData barData = new BarData(xaxis, dataset);
+        chart.setData(barData);
+        chart.setDescription("");
+        chart.invalidate();                                                                         // refresh
+        chart.setDrawValueAboveBar(false);
+        chart.setBackgroundColor(getResources().getColor(R.color.dark_green));
+        chart.setGridBackgroundColor(getResources().getColor(R.color.dark_green));
+        chart.setBorderColor(getResources().getColor(R.color.orange));
+
+        dialog.show();
+    }
 
     public void onPrevious(View view) {
 
@@ -364,42 +543,100 @@ public class PlayActivity extends Activity {
             }
 
             clickNextQuestion = false;
-            twSubmit.setText("SUBMIT");
+            tvSubmit.setText("SUBMIT");
 //                //Animations slide out
             //TODO: Out animations without in immediately overriding
 //            animate(twCategory, R.anim.out_right_to_left);
 //            animate(twQuestion, R.anim.out_left_to_right);
 //            animate(twSubmit, R.anim.out_left_to_right);
             nextQuestion();
+
+            //Check lifelines
+            if (isAskAudienceUsed) {
+                askAudience.setClickable(false);
+                askAudience.setAlpha(0.25f);
+            }
+
             setButtonsClickable(true);
         } else {
             setButtonsClickable(false);
             checkSubmission();
-            twSubmit.setText("NEXT");
+            tvSubmit.setText("NEXT");
             clickNextQuestion = true;
-
         }
     }
 
     private void endGameDialog() {
 
-        String summary;
-        int correctAnswers = 0;
+//        String summary;
+//        int correctAnswers = 0;
+//
+//        //Gets number of correctly answere questions
+//        for (Question question : questions) {
+//            if (question.isAnsweredCorrectly()) {
+//                correctAnswers++;
+//            }
+//        }
+//
+//        summary = "Correctly answered "+correctAnswers+"/"+numberOfQuestions;
+    }
 
-        //Gets number of correctly answere questions
-        for (Question question : questions) {
-            if (question.isAnsweredCorrectly()) {
-                correctAnswers++;
-            }
+
+    public void onInfo(View view) {
+
+        Question question = questions.get(currentQuestionPos);
+
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);                                       //Removes action bar
+        dialog.setContentView(R.layout.play_information);
+
+        //Reference Dialog views
+        TextView dialog_category = (TextView) dialog.findViewById(R.id.play_dialog_category);
+        TextView dialog_title = (TextView) dialog.findViewById(R.id.play_dialog_title);
+        TextView dialog_caption = (TextView) dialog.findViewById(R.id.play_dialog_caption);
+        TextView dialog_excerpt = (TextView) dialog.findViewById(R.id.play_info_excerpt);
+        ImageView dialog_image = (ImageView) dialog.findViewById(R.id.play_dialog_image);
+        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+
+        dialog_category.setText(question.getCategory());
+        dialog_title.setText(question.getQuestion());
+        dialog_caption.setText(question.getImageCaption());
+        dialog_excerpt.setText(question.getExcerpt());
+
+
+        //TODO: Replace with async method
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        try {
+            URL urlConnection = new URL(question.getImageURL());
+            HttpURLConnection connection = (HttpURLConnection) urlConnection.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            dialog_image.setImageBitmap(myBitmap);
+        } catch (Exception e) {
+            Log.e("Play, dialog, ImageView", "Couldn't set image");
+            e.printStackTrace();
         }
 
-        summary = "Correctly answered "+correctAnswers+"/"+numberOfQuestions;
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
-
-
-
-
+        dialog.show();
     }
+
+
+
+
+
+
+
 
 
 
@@ -415,7 +652,7 @@ public class PlayActivity extends Activity {
 
         //Below Resets Variables
         timeCounter = timeLimit;
-        twProgressTime.setText(String.valueOf(timeCounter));
+        tvProgressTime.setText(String.valueOf(timeCounter));
 
         progressBar.setProgress(1);
         resetProgressBar = false;
@@ -453,7 +690,7 @@ public class PlayActivity extends Activity {
                     resetProgressBar = false;
                     isProgressBarThreadRunning = false;
                     setButtonsClickable(false);
-                    twSubmit.setText("ANSWER");
+                    tvSubmit.setText("ANSWER");
                 }
                 catch(Throwable t) {
                     Log.i("Play, PBar Thread","Thread Crash");
@@ -477,14 +714,14 @@ public class PlayActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
 
-            if (msg.what == 0)
+           if (msg.what == 0)
             {
                 progressBar.incrementProgressBy(1);
             }
             else if (msg.what == 1)
             {
                 timeCounter--;
-                twProgressTime.setText(String.valueOf(timeCounter));
+                tvProgressTime.setText(String.valueOf(timeCounter));
             }
             else if (msg.what == 2)
             {
@@ -492,6 +729,11 @@ public class PlayActivity extends Activity {
                 progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.circular_progress_bar_red));
                 progressBar.getProgressDrawable().setBounds(bounds);
                 isCircleRed = true;
+            }
+
+            //Closes dialog if 5 seconds left
+            if (dialog != null && tvProgressTime.getText().equals("5")) {
+                dialog.cancel();
             }
         }
     };
@@ -559,12 +801,6 @@ public class PlayActivity extends Activity {
         long currentTime = System.currentTimeMillis();
 
     }
-
-
-
-
-
-
 
 
 

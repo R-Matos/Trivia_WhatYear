@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="D:\Users\RMatos\Documents\Development\AndroidStudioProjects\Trivia_WhatYear\app\libs\mpandroidchartlibrary-2-1-0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="e8e579486323fc12433aca39b93329498a3bbc2d">
+        <dex dex="D:\Users\RMatos\Documents\Development\AndroidStudioProjects\Trivia_WhatYear\app\build\intermediates\pre-dexed\debug\mpandroidchartlibrary-2-1-0_ee1f5131b02bef57db1d62f3b95c7aad8409aaa3.jar" />
+    </item>
+
+</items>
