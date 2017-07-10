@@ -82,6 +82,7 @@
 
         <ImageView
             android:id="@+id/play_lifeline_5050"
+            android:onClick="on5050"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
@@ -102,6 +103,7 @@
 
         <ImageView
             android:id="@+id/play_lifeline_browse"
+            android:onClick="onBrowse"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
@@ -110,6 +112,7 @@
 
         <ImageView
             android:id="@+id/play_lifeline_freezeTime"
+            android:onClick="onFreezeTime"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"

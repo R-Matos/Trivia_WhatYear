@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -87,6 +88,9 @@ public class PlayActivity extends Activity {
     private boolean isProgressBarThreadRunning;
     private boolean clickNextQuestion;
     private boolean isAskAudienceUsed = false;
+    private boolean is5050Used = false;
+    private boolean isFreezeTimeUsed = false;
+    private boolean isBrowseUsed = false;
 
     //Lifeline variables
     private int answer1percentage = 0;
@@ -487,8 +491,6 @@ public class PlayActivity extends Activity {
 
         } //END OF IF STATEMENT
 
-
-
         //Initialise chart
         com.github.mikephil.charting.charts.BarChart chart = new com.github.mikephil.charting.charts.BarChart(dialog.getContext());
         dialog.setContentView(chart);
@@ -527,6 +529,104 @@ public class PlayActivity extends Activity {
         dialog.show();
     }
 
+
+    public void on5050(View view) {
+
+        Question question = questions.get(currentQuestionPos);
+        int correctAnswerButton = 0;
+
+        //Determines correct answer
+        if (is5050Used == false) {
+
+            is5050Used = true;
+
+            //Turns all buttons transparent, then makes possible answers opaque
+            btnAnswer1.setAlpha(0.25f);
+            btnAnswer2.setAlpha(0.25f);
+            btnAnswer3.setAlpha(0.25f);
+            btnAnswer4.setAlpha(0.25f);
+
+
+            if (question.getPossibleAnswer1() == question.getYear()) {
+                correctAnswerButton = 1;
+                btnAnswer1.setAlpha(1f);
+            } else if (question.getPossibleAnswer2() == question.getYear()) {
+                correctAnswerButton = 2;
+                btnAnswer2.setAlpha(1f);
+            } else if (question.getPossibleAnswer3() == question.getYear()) {
+                correctAnswerButton = 3;
+                btnAnswer3.setAlpha(1f);
+            } else if (question.getPossibleAnswer4() == question.getYear()) {
+                correctAnswerButton = 4;
+                btnAnswer4.setAlpha(1f);
+            }
+
+
+            Random rand = new Random();
+            int range = rand.nextInt(3);
+
+            //Determines other answer
+            if (correctAnswerButton == 1) {
+                if (range == 0) {
+                    btnAnswer2.setAlpha(1f);
+                } else if (range == 1) {
+                    btnAnswer3.setAlpha(1f);
+                } else if (range == 2) {
+                    btnAnswer4.setAlpha(1f);
+                }
+            } else if (correctAnswerButton == 2) {
+                if (range == 1) {
+                    btnAnswer1.setAlpha(1f);
+                } else if (range == 1) {
+                    btnAnswer3.setAlpha(1f);
+                } else if (range == 2) {
+                    btnAnswer4.setAlpha(1f);
+                }
+            } else if (correctAnswerButton == 3) {
+                if (range == 0) {
+                    btnAnswer1.setAlpha(1f);
+                } else if (range == 1) {
+                    btnAnswer2.setAlpha(1f);
+                } else if (range == 2) {
+                    btnAnswer4.setAlpha(1f);
+                }
+            } else if (correctAnswerButton == 4) {
+                if (range == 0) {
+                    btnAnswer1.setAlpha(1f);
+                } else if (range == 1) {
+                    btnAnswer2.setAlpha(1f);
+                } else if (range == 2) {
+                    btnAnswer3.setAlpha(1f);
+                }
+            }
+        }
+    }
+
+
+
+    public void onBrowse(View view) {
+
+        isBrowseUsed = true;
+
+        String searchTerms = questions.get(currentQuestionPos).getQuestion();
+        searchTerms = searchTerms.replace(" ", "+");
+
+        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.co.uk/?gfe_rd=cr&ei=cXdjWZqrEPTW8geQ7oH4Bg#q="+searchTerms));
+        startActivity(intent);
+
+    }
+
+
+
+    public void onFreezeTime(View view) {
+
+        if (!isFreezeTimeUsed) {
+            isProgressBarThreadRunning = false;
+            isFreezeTimeUsed = true;
+        }
+
+    }
+
     public void onPrevious(View view) {
 
 
@@ -551,11 +651,38 @@ public class PlayActivity extends Activity {
 //            animate(twSubmit, R.anim.out_left_to_right);
             nextQuestion();
 
-            //Check lifelines
+            //Check lifelines below
             if (isAskAudienceUsed) {
                 askAudience.setClickable(false);
                 askAudience.setAlpha(0.25f);
+                isAskAudienceUsed = false;
             }
+
+            if (is5050Used) {
+                fiftyfifty.setClickable(false);
+                fiftyfifty.setAlpha(0.20f);
+                btnAnswer1.setAlpha(1f);
+                btnAnswer2.setAlpha(1f);
+                btnAnswer3.setAlpha(1f);
+                btnAnswer4.setAlpha(1f);
+                is5050Used = false;
+            }
+
+            if (isBrowseUsed) {
+                browse.setClickable(false);
+                browse.setAlpha(0.2f);
+            }
+
+            if (isFreezeTimeUsed) {
+                freezeTime.setClickable(false);
+                freezeTime.setAlpha(0.15f);
+                isProgressBarThreadRunning = true;
+            }
+
+
+
+
+
 
             setButtonsClickable(true);
         } else {
@@ -666,12 +793,12 @@ public class PlayActivity extends Activity {
         final Thread background = new Thread(new Runnable() {
             public void run() {
                 try {
-                    for (int i = 1; i <= iterations; i++) {
+                    for (int i = 1; i <= iterations && isProgressBarThreadRunning; i++) {
 
                         Thread.sleep(iterations / (iterations/10));
 
                         //Ends thread if required to reset
-                        if (!resetProgressBar && isProgressBarThreadRunning) {
+                        if (!resetProgressBar) {
                             //Increments progress counter
                             progressBarHandler.sendEmptyMessage(0);
 
@@ -687,10 +814,15 @@ public class PlayActivity extends Activity {
                         }
                     }
 
-                    resetProgressBar = false;
-                    isProgressBarThreadRunning = false;
-                    setButtonsClickable(false);
-                    tvSubmit.setText("ANSWER");
+                    //Only if ends normally, not a lifeline used
+                    if (isProgressBarThreadRunning) {
+                        resetProgressBar = false;
+                        isProgressBarThreadRunning = false;
+                        setButtonsClickable(false);
+                        tvSubmit.setText("ANSWER");
+                    }
+
+
                 }
                 catch(Throwable t) {
                     Log.i("Play, PBar Thread","Thread Crash");
@@ -704,9 +836,7 @@ public class PlayActivity extends Activity {
 
         background.start();
 
-        if (!isProgressBarThreadRunning) {
 
-        }
     }
 
     //Handler for progress bar thread
@@ -801,7 +931,6 @@ public class PlayActivity extends Activity {
         long currentTime = System.currentTimeMillis();
 
     }
-
 
 
 }
